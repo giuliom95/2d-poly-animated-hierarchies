@@ -1,6 +1,7 @@
-# 2d-poly-hierarchies
+# 2d-poly-animated-hierarchies
 
-A library to manage hierarchies of bi-dimensional polygons.  
+A library to manage hierarchies of bi-dimensional polygons 
+and basic animations of them.  
 It is written in Python and relies on the [NumPy][1] library.  
 The test modules use [PyOpenGL][2] through the [PyGame][3] framework.  
 
@@ -17,3 +18,9 @@ homogeneous coordinates) and the color of these.
 Every *Shape* needs a *Transform*. The *Transform* objects are hierarchically
 managed as trees: every *Transform* has a parent, except for the tree root.
 This root will be the transformation matrix of the world.
+
+## In dev/To do
+
+Check the [Trello board coupled to this repo][4].
+
+[4]: https://trello.com/b/i3FmiFIE/2d-poly-animated-hierarchies
