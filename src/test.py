@@ -3,6 +3,7 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 from transform import *
+from shape import *
 
 SCREEN_SIZE = (600,600)
 
@@ -55,3 +56,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+   
+
