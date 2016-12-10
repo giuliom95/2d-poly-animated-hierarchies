@@ -5,6 +5,8 @@ from OpenGL.GL import *
 from transform import *
 from shape import *
 
+import numpy as np
+
 SCREEN_SIZE = (600,600)
 
 def main():
@@ -17,14 +19,26 @@ def main():
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     
-    rot = 0
-    world = Transform(None)
+    time = 0
     
-    t1 = Transform(world)
-    t1.set_translation([0.3,0])
+    world = Transform(
+        None,
+        lambda x: (0, 0),
+        lambda x: 0,
+        lambda x: (1, 1))
     
-    vertices = np.array([[0,0,1],[.5,0,1],[0,.5,1],[.5,.5,1]])
-    faces = [[0,1,2], [1,2,3]]
+    t1 = Transform(
+        world,
+        lambda x: (0.5*np.sin(x*(np.pi/64)), 0.5*np.cos(x*(np.pi/64))),
+        lambda x: x*(np.pi/64),
+        lambda x: (1, 1))
+    
+    vertices = np.array([
+        [-.25, -.25, 1],
+        [+.25, -.25, 1],
+        [+.25, +.25, 1],
+        [-.25, +.25, 1]])
+    faces = [[0,1,2], [0,2,3]]
     colors = [[255,0,0]]*len(vertices)
     s1 = Shape(vertices, colors, faces, t1)
     
@@ -36,9 +50,9 @@ def main():
             
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
-        rot += 2
-        world.set_rotation(rot)
-        t1.set_rotation(rot)
+        time += 1
+        world.update(time)
+        t1.update(time)
         
         glBegin(GL_TRIANGLES)
         [

@@ -5,17 +5,27 @@ class Transform(object):
     Defines and contains a transformation matrix.
     """
     
-    def __init__(self, parent):
+    def __init__(self, parent, translation_func, rotation_func, scale_func):
         """
         Args:
         parent -- The parent transform. If None, this transform 
         will be the world tranform.
+        translation_func -- Translation function.
+        rotation_func -- Rotation function.
+        scale_func -- Scale function.
         """
         self.parent = parent
-        self.translation = [0,0]
-        self.rotation = 0
-        self.scale = [1,1]
-        self.mat = np.identity(3)
+        
+        self.translation_func = translation_func
+        self.rotation_func = rotation_func
+        self.scale_func = scale_func
+        
+        self.translation = None
+        self.rotation = None
+        self.scale = None
+        self.mat = None
+        self.update(0)
+        
             
     def rebuild_mat(self):
         """
@@ -34,39 +44,6 @@ class Transform(object):
         self.mat[1][1] = sy * cos
         self.mat[0][2] = tx
         self.mat[1][2] = ty
-    
-    def set_rotation(self, r):
-        """
-        Sets rotation.
-        Updates the transf matrix.
-        
-        Args:
-        r -- New rotation in degrees given as a float.
-        """
-        self.rotation = np.pi/180 * r
-        self.rebuild_mat()
-        
-    def set_translation(self, t):
-        """
-        Sets translation.
-        Updates the transf matrix.
-        
-        Args:
-        t -- New translation given as a couple of floats.
-        """
-        self.translation = t[:2]
-        self.rebuild_mat()
-        
-    def set_scale(self, s):
-        """
-        Sets scale.
-        Updates the transf matrix.
-        
-        Args:
-        s -- New scale given as a couple of floats.
-        """
-        self.scale = s[:2]
-        self.rebuild_mat()
         
     def get_vertices(self, vertices):
         """
@@ -83,11 +60,24 @@ class Transform(object):
     
     def calc_world_matrix(self):
         """
-        Calculates the world transf matrix recursively.
+        Calculates recursively the world transform matrix.
         """
         if self.parent is None:
             return self.mat
         else:
             return np.dot(self.parent.calc_world_matrix(), self.mat)
-    
+            
+    def update(self, x):
+        """
+        Updates translation, rotation and scale according to their
+        associated functions evaluated with x as parameter.
+        
+        Args:
+        x -- Parameter passed to the functions.
+        """
+        self.translation = self.translation_func(x)
+        self.rotation = self.rotation_func(x)
+        self.scale = self.scale_func(x)
+        self.rebuild_mat()
+
 
