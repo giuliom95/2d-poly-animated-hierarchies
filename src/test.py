@@ -23,8 +23,7 @@ def main():
     old_ticks = ticks
     old_time = pygame.time.get_ticks()
     
-    world = Transform(
-        None,
+    world = World(
         lambda x: (0.5*np.sin(x*(np.pi/64)), 0),
         lambda x: 0,
         lambda x: (1, 1))
@@ -112,8 +111,7 @@ def main():
             print(ticks - old_ticks)
             old_time = cur_time
             old_ticks = ticks
-            
-        # pygame.time.wait(10)
+
 
 if __name__ == '__main__':
     main()
