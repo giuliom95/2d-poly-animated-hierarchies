@@ -8,7 +8,7 @@ class Transform(object):
     def __init__(self, parent, translation_func, rotation_func, scale_func):
         """
         Args:
-        parent -- The parent transform.
+        parent -- The parent transform. If None self is the world transform.
         translation_func -- Translation function.
         rotation_func -- Rotation function.
         scale_func -- Scale function.
@@ -23,9 +23,13 @@ class Transform(object):
         self.rotation = None
         self.scale = None
         self.mat = np.identity(3)
-        self.update(0)
+        self.update_mat(0)
         
-        self.update_world_children(self)
+        self.children = []
+        self.update_parent_children()
+        
+        self.world_mat = self.calc_world_mat()
+        
         
     def rebuild_mat(self):
         """
@@ -44,6 +48,7 @@ class Transform(object):
         self.mat[0][2] = tx
         self.mat[1][2] = ty
         
+        
     def get_vertices(self, vertices):
         """
         Applies the transformation to a list of vertices
@@ -51,22 +56,24 @@ class Transform(object):
         Args:
         vertices -- A list of vertices given in homogeneous coordinates.
         """
-        world_mat = self.calc_world_matrix()
         return np.array([
-            np.dot(world_mat, vertex) 
+            np.dot(self.world_mat, vertex) 
             for vertex in vertices
         ])
     
-    def calc_world_matrix(self):
+    
+    def calc_world_mat(self):
         """
-        Calculates recursively the world transform matrix.
+        Returns the world matrix of the parent.
+        If self is the world then returns self.mat 
         """
-        if type(self) is World:
-            return self.mat
+        if self.parent:
+            return np.dot(self.parent.world_mat, self.mat)
         else:
-            return np.dot(self.parent.calc_world_matrix(), self.mat)
+            return self.mat
             
-    def update(self, x):
+            
+    def update_mat(self, x):
         """
         Updates translation, rotation and scale according to their
         associated functions evaluated with x as parameter.
@@ -80,37 +87,7 @@ class Transform(object):
         self.scale = self.scale_func(x)
         self.rebuild_mat()
     
-    def update_world_children(self, transform):
-        """
-        Adds transform to the children list of the World
-        """
-        if type(self) is World:
-            self.children.append(transform)
-        else:
-            self.parent.update_world_children(transform)
-        
-
-class World(Transform):
-    """
-    The World transform.
-    """
-    
-    def __init__(self, translation_func, rotation_func, scale_func):
-        """
-        Args:
-        translation_func -- Translation function.
-        rotation_func -- Rotation function.
-        scale_func -- Scale function.
-        """
-        self.children = []
-        
-        Transform.__init__(
-            self,
-            None,
-            translation_func,
-            rotation_func,
-            scale_func)
-        
+           
     def update_all(self, x):
         """
         Updates translation, rotation and scale of self and every child
@@ -119,7 +96,17 @@ class World(Transform):
         Args:
         x -- Parameter passed to the functions.
         """
-        self.update(x)
-        [child.update(x) for child in self.children]
+        self.update_mat(x)
+        self.world_mat = self.calc_world_mat()
+        
+        [child.update_all(x) for child in self.children]
         
     
+    def update_parent_children(self):
+        """
+        Adds transform to the children list of the parent
+        """
+        if self.parent:
+            self.parent.children.append(self)
+
+
