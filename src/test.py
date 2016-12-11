@@ -71,11 +71,7 @@ def main():
             
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
-        world.update(ticks)
-        t1.update(ticks)
-        t2.update(ticks)
-        t3.update(ticks)
-        t4.update(ticks)
+        world.update_all(ticks)
         ticks += 1
         
         glBegin(GL_TRIANGLES)

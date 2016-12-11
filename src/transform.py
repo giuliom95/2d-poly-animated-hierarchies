@@ -23,10 +23,12 @@ class Transform(object):
         self.translation = None
         self.rotation = None
         self.scale = None
-        self.mat = None
+        self.mat = np.identity(3)
         self.update(0)
         
-            
+        self.children = []
+        self.update_world_children(self)
+        
     def rebuild_mat(self):
         """
         Rebuilds the transformation matrix according to
@@ -37,7 +39,6 @@ class Transform(object):
         tx, ty = self.translation
         sx, sy = self.scale
         
-        self.mat = np.identity(3)
         self.mat[0][0] = sx * cos
         self.mat[0][1] = -1 * sin
         self.mat[1][0] = sin
@@ -75,9 +76,31 @@ class Transform(object):
         Args:
         x -- Parameter passed to the functions.
         """
+        
         self.translation = self.translation_func(x)
         self.rotation = self.rotation_func(x)
         self.scale = self.scale_func(x)
         self.rebuild_mat()
-
+    
+    
+    def update_all(self, x):
+        """
+        Updates translation, rotation and scale of self and every child
+        according to their associated functions evaluated with x as parameter.
+        
+        Args:
+        x -- Parameter passed to the functions.
+        """
+        self.update(x)
+        [child.update(x) for child in self.children]
+    
+    def update_world_children(self, transform):
+        """
+        Adds transform to the children list of the World
+        """
+        if self.parent is None:
+            self.children.append(transform)
+        else:
+            self.parent.update_world_children(transform)
+        
 
