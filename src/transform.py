@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Transform(object):
     """
     Defines and contains a transformation matrix.
@@ -27,9 +28,8 @@ class Transform(object):
         
         self.children = []
         self.update_parent_children()
-        
+
         self.world_mat = self.calc_world_mat()
-        
         
     def rebuild_mat(self):
         """
@@ -48,7 +48,6 @@ class Transform(object):
         self.mat[0][2] = tx
         self.mat[1][2] = ty
         
-        
     def get_vertices(self, vertices):
         """
         Applies the transformation to a list of vertices
@@ -61,7 +60,6 @@ class Transform(object):
             for vertex in vertices
         ])
     
-    
     def calc_world_mat(self):
         """
         Returns the world matrix of the parent.
@@ -71,7 +69,6 @@ class Transform(object):
             return np.dot(self.parent.world_mat, self.mat)
         else:
             return self.mat
-            
             
     def update_mat(self, x):
         """
@@ -86,7 +83,6 @@ class Transform(object):
         self.rotation = self.rotation_func(x)
         self.scale = self.scale_func(x)
         self.rebuild_mat()
-    
            
     def update_all(self, x):
         """
@@ -100,13 +96,10 @@ class Transform(object):
         self.world_mat = self.calc_world_mat()
         
         [child.update_all(x) for child in self.children]
-        
-    
+
     def update_parent_children(self):
         """
         Adds transform to the children list of the parent
         """
         if self.parent:
             self.parent.children.append(self)
-
-

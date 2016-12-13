@@ -7,7 +7,8 @@ from shape import *
 
 import numpy as np
 
-SCREEN_SIZE = (600,600)
+SCREEN_SIZE = (600, 600)
+
 
 def main():
     
@@ -50,14 +51,13 @@ def main():
         lambda x: x*(np.pi/32),
         lambda x: (1, 1))
     
-    
     vertices = np.array([
         [-.25, -.25, 1],
         [+.25, -.25, 1],
         [+.25, +.25, 1],
         [-.25, +.25, 1]])
-    faces = [[0,1,2], [0,2,3]]
-    colors = [[255,0,0]]*len(vertices)
+    faces = [[0, 1, 2], [0, 2, 3]]
+    colors = [[255, 0, 0]]*len(vertices)
     s1 = Shape(vertices, colors, faces, t1)
     s2 = Shape(vertices, colors, faces, t2)
     s3 = Shape(vertices, colors, faces, t3)
@@ -77,29 +77,29 @@ def main():
         glBegin(GL_TRIANGLES)
         [
             [
-                (glColor(color), glVertex(point)) 
-                for (color, point) in face
+                (glColor(vcolor), glVertex(point))
+                for (vcolor, point) in face
             ] 
             for face in s1.get_faces()
         ]
         [
             [
-                (glColor(color), glVertex(point)) 
-                for (color, point) in face
+                (glColor(vcolor), glVertex(point))
+                for (vcolor, point) in face
             ] 
             for face in s2.get_faces()
         ]
         [
             [
-                (glColor(color), glVertex(point)) 
-                for (color, point) in face
+                (glColor(vcolor), glVertex(point))
+                for (vcolor, point) in face
             ] 
             for face in s3.get_faces()
         ]
         [
             [
-                (glColor(color), glVertex(point)) 
-                for (color, point) in face
+                (glColor(vcolor), glVertex(point))
+                for (vcolor, point) in face
             ] 
             for face in s4.get_faces()
         ]
@@ -116,5 +116,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-   
-

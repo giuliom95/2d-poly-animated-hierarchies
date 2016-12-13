@@ -23,5 +23,3 @@ class Shape(object):
         """
         transf_vs = self.transform.get_vertices(self.vertices)
         return [[(self.colors[v], transf_vs[v]) for v in f] for f in self.faces]
-
-
