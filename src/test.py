@@ -3,7 +3,8 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 from transform import *
-from shape import *
+from shape import Shape
+from drawable_shape import DrawableShape
 
 import numpy as np
 
@@ -58,10 +59,10 @@ def main():
         [-.25, +.25, 1]])
     faces = [[0, 1, 2], [0, 2, 3]]
     colors = [[255, 0, 0]]*len(vertices)
-    s1 = Shape(vertices, colors, faces, t1)
-    s2 = Shape(vertices, colors, faces, t2)
-    s3 = Shape(vertices, colors, faces, t3)
-    s4 = Shape(vertices, colors, faces, t4)
+    s1 = DrawableShape(vertices, colors, faces, t1)
+    s2 = DrawableShape(vertices, colors, faces, t2)
+    s3 = DrawableShape(vertices, colors, faces, t3)
+    s4 = DrawableShape(vertices, colors, faces, t4)
     
     while True:
         for event in pygame.event.get():
@@ -75,34 +76,7 @@ def main():
         ticks += 1
         
         glBegin(GL_TRIANGLES)
-        [
-            [
-                (glColor(vcolor), glVertex(point))
-                for (vcolor, point) in face
-            ] 
-            for face in s1.get_faces()
-        ]
-        [
-            [
-                (glColor(vcolor), glVertex(point))
-                for (vcolor, point) in face
-            ] 
-            for face in s2.get_faces()
-        ]
-        [
-            [
-                (glColor(vcolor), glVertex(point))
-                for (vcolor, point) in face
-            ] 
-            for face in s3.get_faces()
-        ]
-        [
-            [
-                (glColor(vcolor), glVertex(point))
-                for (vcolor, point) in face
-            ] 
-            for face in s4.get_faces()
-        ]
+        world.draw_all()
         glEnd()
                 
         pygame.display.flip()
