@@ -125,10 +125,10 @@ class Transform(object):
         """
         self.shapes.append(shape)
 
-    def draw_all(self):
+    def draw_all(self, layer=0):
         """
         Draws all the shapes of the hierarchy
         :return: None
         """
-        [shape.draw() for shape in self.shapes]
+        [shape.draw() for shape in self.shapes if shape.layer == layer]
         [child.draw_all() for child in self.children]

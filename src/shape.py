@@ -6,10 +6,10 @@ class Shape(object):
     def __init__(self, vertices, colors, faces, transform):
         """
         Args:
-        vertices -- A list of vertices given in homogeneous coordinates.
-        colors -- A list that assigns a vertex to a color
-        faces -- A list of triangular faces given as triples of indexes.
-        transform -- The transform to apply to this shape
+        :param vertices: A list of vertices given in homogeneous coordinates.
+        :param colors: A list that assigns a vertex to a color
+        :param faces: A list of triangular faces given as triples of indexes.
+        :param transform: The transform to apply to this shape
         """
         self.vertices = vertices
         self.colors = colors

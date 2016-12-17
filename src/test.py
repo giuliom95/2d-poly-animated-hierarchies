@@ -75,9 +75,7 @@ def main():
         world.update_all(ticks)
         ticks += 1
         
-        glBegin(GL_TRIANGLES)
         world.draw_all()
-        glEnd()
                 
         pygame.display.flip()
         
